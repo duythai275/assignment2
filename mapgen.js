@@ -1,5 +1,6 @@
 const ljf = require( "load-json-file" );
 const wjf = require( "write-json-file" );
+const ou = ljf.sync( "./data/vnProv.json" );
 const regions = [
 	{
 		name: "north",
@@ -23,10 +24,12 @@ const regions = [
 //const filter = feature => feature.properties.parent === "T6shP0GyRuQ";
 
 const jsonTransformMapWithFilterFn = (data, region) => {
-	data.features = data.features.filter( feature => feature.properties.parent === region.id );
-	jsonTransformMap( data, region );
+	const org = {};
+	org.features = data.features.filter( feature => feature.properties.parent === region.id );
+	//jsonTransformMap( org, region );
+	outputJson( org, region );
 }
-
+/*
 const jsonTransformMap = (data, region) => {
   outputJson( data.features.map( feature => {
     return {
@@ -40,12 +43,12 @@ const jsonTransformMap = (data, region) => {
     };
   } ), region )
 };
-
+*/
 const outputJson = (features, region) => {
 	wjf.sync( `./data/${region.name}regionmap.json`, features, {indent: 2} );
 }
 
-regions.forEach(region => {jsonTransformMapWithFilterFn(ljf.sync( "./data/vnProv.json" ),region);});
+regions.forEach(region => {jsonTransformMapWithFilterFn(ou,region);});
 
 
 // change the outputfile name based on the region
